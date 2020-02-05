@@ -228,6 +228,7 @@ class OSPREYSlave : public PJON<Strategy> {
               (uint32_t)(PJON_MICROS() - _last_request_time) >
               (OSPREY_ADDRESSING_TIMEOUT * 1.125)
             ) {
+              PJON_DELAY(PJON_RANDOM(OSPREY_COLLISION_DELAY));
               _last_request_time = PJON_MICROS();
               response[0] = OSPREY_ID_REFRESH;
               response[5] = this->_device_id;

@@ -55,3 +55,5 @@
 #define OSPREY_ADDRESSING_TIMEOUT   4000000
 /* Master reception time during LIST_ID broadcast (250 milliseconds) */
 #define OSPREY_LIST_IDS_TIME         250000
+// Slave max collision delay when OSPREY_ID_LIST is received (250 milliseconds)
+#define OSPREY_COLLISION_DELAY          250
