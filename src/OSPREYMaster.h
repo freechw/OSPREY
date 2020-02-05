@@ -63,13 +63,14 @@ class OSPREYMaster : public PJON<Strategy> {
 
     /* Add a device reference: */
 
-    bool add_id(uint8_t id, uint32_t rid, bool state) {
+    bool add_id(uint8_t id, uint32_t rid) {
       if(
-        (ids[id - 1].state && (ids[id - 1].rid == rid)) ||
+        (ids[id - 1].rid == rid) ||
         (!ids[id - 1].state && !ids[id - 1].rid)
       ) {
         ids[id - 1].rid = rid;
-        ids[id - 1].state = state;
+        ids[id - 1].state = 1;
+        _found_slave(rid);
         return true;
       }
       return false;
@@ -132,7 +133,7 @@ class OSPREYMaster : public PJON<Strategy> {
           (uint32_t)(PJON_MICROS() - ids[id - 1].registration) <
           OSPREY_ADDRESSING_TIMEOUT
         ) {
-          ids[id - 1].state = true;
+          add_id(id, rid);
           PJON<Strategy>::remove(ids[id - 1].packet_index);
           return true;
         }
@@ -226,7 +227,7 @@ class OSPREYMaster : public PJON<Strategy> {
             negate_id(this->last_packet_info.sender_id, rid);
 
         if(request == OSPREY_ID_REFRESH)
-          if(!add_id(this->data[(overhead - CRC_overhead) + 5], rid, 1))
+          if(!add_id(this->data[(overhead - CRC_overhead) + 5], rid))
             negate_id(this->last_packet_info.sender_id, rid);
 
         if(request == OSPREY_ID_NEGATE)
