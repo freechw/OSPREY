@@ -33,23 +33,35 @@ class OSPREYSlave : public PJON<Strategy> {
     /* OSPREYSlave bus default initialization:
        State: Local (bus_id: 0.0.0.0)
        Acknowledge: true (Acknowledge is requested)
-       device id: PJON_NOT_ASSIGNED (255)
+       Device id: PJON_NOT_ASSIGNED (255)
        Mode: PJON_HALF_DUPLEX
        Sender info: included
-       Strategy: SoftwareBitBang
 
-       OSPREYSlave initialization:
-       OSPREYSlave<SoftwareBitBang> bus; */
+       OSPREYSlave initialization passing a custom RID:
+       uint32_t custom_rid = 133;
+       OSPREYSlave<SoftwareBitBang> bus(custom_rid); */
 
-    OSPREYSlave() : PJON<Strategy>(PJON_NOT_ASSIGNED) {
+    OSPREYSlave(uint32_t rid = 0) : PJON<Strategy>(PJON_NOT_ASSIGNED) {
+      _rid = rid;
       set_default();
     };
 
-    /* OSPREYSlave initialization passing bus and device id:
+    /* OSPREYSlave bus default initialization:
+       State: Shared
+       Acknowledge: true (Acknowledge is requested)
+       Device id: PJON_NOT_ASSIGNED (255)
+       Mode: PJON_HALF_DUPLEX
+       Sender info: included
+
+       OSPREYSlave initialization passing bus id:
        uint8_t my_bus = {1, 1, 1, 1};
        OSPREYSlave<SoftwareBitBang> bus(my_bys); */
 
-    OSPREYSlave(const uint8_t *bi) : PJON<Strategy>(bi, PJON_NOT_ASSIGNED) {
+    OSPREYSlave(
+      const uint8_t *bi,
+      uint32_t rid = 0
+    ) : PJON<Strategy>(bi, PJON_NOT_ASSIGNED) {
+      _rid = rid;
       set_default();
     };
 
@@ -158,7 +170,6 @@ class OSPREYSlave : public PJON<Strategy> {
         (this->_device_id != OSPREY_MASTER_ID) &&
         (this->last_packet_info.sender_id == OSPREY_MASTER_ID)
       ) {
-
         uint8_t overhead =
           this->packet_overhead(this->last_packet_info.header);
         uint8_t CRC_overhead =
