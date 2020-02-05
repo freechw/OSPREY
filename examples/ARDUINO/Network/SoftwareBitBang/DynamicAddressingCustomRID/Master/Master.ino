@@ -39,14 +39,15 @@ void receiver_function(uint8_t *payload, uint16_t length, const PJON_Packet_Info
   /* Make use of the payload before sending something, the buffer where payload points to is
      overwritten when a new message is dispatched */
 
-  // OSPREY addressing packets
+  /* If the packet contains the OSPREY_DYNAMIC_ADDRESSING_PORT port it is
+     part of the dynamic addressing procedure */
   if(packet_info.port == OSPREY_DYNAMIC_ADDRESSING_PORT) {
     uint32_t rid =
       (uint32_t)(payload[1]) << 24 |
       (uint32_t)(payload[2]) << 16 |
       (uint32_t)(payload[3]) <<  8 |
       (uint32_t)(payload[4]);
-    Serial.print("OSPREYSlave addressing request: ");
+    Serial.print("OSPREYMaster addressing request: ");
     Serial.print(payload[0]);
     Serial.print(" RID: ");
     Serial.print(rid);
