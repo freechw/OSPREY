@@ -124,12 +124,11 @@ class OSPREYSlave : public PJON<Strategy> {
       uint16_t length,
       const PJON_Packet_Info &packet_info
     ) {
-      if(!handle_addressing()) {
-         PJON_Packet_Info p_i;
-         memcpy(&p_i, &packet_info, sizeof(PJON_Packet_Info));
-         p_i.custom_pointer = _custom_pointer;
-        _slave_receiver(payload, length, p_i);
-      }
+      PJON_Packet_Info p_i;
+      memcpy(&p_i, &packet_info, sizeof(PJON_Packet_Info));
+      p_i.custom_pointer = _custom_pointer;
+      handle_addressing();
+      _slave_receiver(payload, length, p_i);
     };
 
     /* Generate a new device rid: */
@@ -149,18 +148,7 @@ class OSPREYSlave : public PJON<Strategy> {
 
     /* Handle dynamic addressing requests and responses: */
 
-    bool handle_addressing() {
-      if( // Detect mult-master dynamic addressing
-        (this->last_packet_info.header & PJON_PORT_BIT) &&
-        (this->last_packet_info.header & PJON_TX_INFO_BIT) &&
-        (this->last_packet_info.header & PJON_CRC_BIT) &&
-        (this->last_packet_info.port == OSPREY_DYNAMIC_ADDRESSING_PORT) &&
-        (
-          (this->last_packet_info.sender_id == PJON_NOT_ASSIGNED) ||
-          (this->last_packet_info.sender_id == this->_device_id)
-        )
-      ) return true;
-
+    void handle_addressing() {
       if( // Handle master-slave dynamic addressing
         (this->last_packet_info.header & PJON_PORT_BIT) &&
         (this->last_packet_info.header & PJON_TX_INFO_BIT) &&
@@ -250,9 +238,7 @@ class OSPREYSlave : public PJON<Strategy> {
             request_id();
           }
         }
-        return true;
       }
-      return false;
     };
 
     /* Slave receive function: */

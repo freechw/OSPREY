@@ -33,7 +33,6 @@ struct Device_reference {
 template<typename Strategy = SoftwareBitBang>
 class OSPREYMaster : public PJON<Strategy> {
   public:
-    bool debug = false;
     Device_reference ids[OSPREY_MAX_SLAVES];
     uint8_t required_config =
       PJON_TX_INFO_BIT | PJON_CRC_BIT | PJON_ACK_REQ_BIT | PJON_PORT_BIT;
@@ -192,8 +191,8 @@ class OSPREYMaster : public PJON<Strategy> {
       PJON_Packet_Info p_i;
       memcpy(&p_i, &packet_info, sizeof(PJON_Packet_Info));
       p_i.custom_pointer = _custom_pointer;
-      if(!handle_addressing() || debug)
-        _master_receiver(payload, length, p_i);
+      handle_addressing();
+      _master_receiver(payload, length, p_i);
     };
 
     /* Handle addressing procedure if related: */
