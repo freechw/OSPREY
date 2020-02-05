@@ -14,18 +14,13 @@ uint32_t t_millis;
 
 void setup() {
   Serial.begin(115200);
-  /* Let addressing procedure packets to be received by the receiver function
-     to ease debugging or analysis */
-  master.debug = true;
-
   master.strategy.set_pin(5);
   master.set_receiver(receiver_function);
   master.set_error(error_handler);
   master.begin();
   /* Send a continuous greetings every second
-     to showcase the receiver function functionality if debug is active */
-  if(master.debug)
-    master.send_repeatedly(PJON_BROADCAST, "Master says hi!", 15, 2500000);
+     to showcase the receiver function functionality */
+  master.send_repeatedly(PJON_BROADCAST, "Master says hi!", 15, 2500000);
   t_millis = millis();
 };
 
@@ -33,10 +28,6 @@ void error_handler(uint8_t code, uint16_t data, void *custom_pointer) {
   if(code == PJON_CONNECTION_LOST) {
     Serial.print("PJON error: connection lost with device id ");
     Serial.println((uint8_t)master.packets[data].content[0], DEC);
-  }
-  if(code == OSPREY_ID_ACQUISITION_FAIL) {
-    Serial.print("PJONMaster error: connection lost with slave id ");
-    Serial.println(data, DEC);
   }
   if(code == OSPREY_DEVICES_BUFFER_FULL) {
     Serial.print("PJONMaster error: master devices' buffer is full with a length of ");
@@ -48,8 +39,8 @@ void receiver_function(uint8_t *payload, uint16_t length, const PJON_Packet_Info
   /* Make use of the payload before sending something, the buffer where payload points to is
      overwritten when a new message is dispatched */
 
-  // If debug is active prints addressing packet infromation
-  if(packet_info.port == OSPREY_DYNAMIC_ADDRESSING_PORT && packet_info.sender_id!=PJON_NOT_ASSIGNED) {
+  // OSPREY addressing packet
+  if(packet_info.port == OSPREY_DYNAMIC_ADDRESSING_PORT) {
     uint32_t rid =
       (uint32_t)(payload[1]) << 24 |
       (uint32_t)(payload[2]) << 16 |

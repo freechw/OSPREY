@@ -35,10 +35,19 @@ void write_default_configuration() {
 };
 
 void receiver_handler(uint8_t *payload, uint16_t length, const PJON_Packet_Info &packet_info) {
-  Serial.print("Received: ");
-  for(uint16_t i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-    Serial.print(" ");
+  /* If the packet contains the OSPREY_DYNAMIC_ADDRESSING_PORT port it is
+     part of the dynamic addressing procedure */
+  if(packet_info.port == OSPREY_DYNAMIC_ADDRESSING_PORT) {
+    Serial.print("OSPREY addressing request: ");
+    Serial.print(payload[0]);
+    Serial.print(" Length: ");
+    Serial.print(length);
+  } else { // All other packets
+    Serial.print("Packet received: ");
+    for(uint16_t i = 0; i < length; i++) {
+      Serial.print((char)payload[i]);
+      Serial.print(" ");
+    }
   }
   Serial.println();
   Serial.flush();

@@ -62,16 +62,16 @@ void error_handler(uint8_t code, uint16_t data, void *custom_pointer) {
 
 void setup() {
   Serial.begin(115200);
-  
+
   EEPROM.begin(9);
   if(!is_initialized()) {
     write_default_configuration();
-    //Let's write the rid in the EEPROM 
+    //Let's write the rid in the EEPROM
     EEPROM.put(5, 987654321);
   }
   EEPROM.get(5, eeprom_rid);
   EEPROM.end();
-  
+
   slave.set_rid(eeprom_rid);
   slave.set_error(error_handler);
   slave.set_receiver(receiver_handler);
