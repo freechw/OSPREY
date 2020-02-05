@@ -28,6 +28,7 @@ class OSPREYSlave : public PJON<Strategy> {
     bool connected = false;
     uint8_t required_config =
       PJON_ACK_REQ_BIT | PJON_TX_INFO_BIT | PJON_CRC_BIT | PJON_PORT_BIT;
+    uint8_t configuration[OSPREY_CONFIGURATION_LENGTH];
 
     /* OSPREYSlave bus default initialization:
        State: Local (bus_id: 0.0.0.0)
@@ -181,6 +182,11 @@ class OSPREYSlave : public PJON<Strategy> {
               rid
             )
           ) {
+            memcpy(
+              configuration,
+              this->data + (overhead - CRC_overhead) + 6,
+              OSPREY_CONFIGURATION_LENGTH
+            );
             response[0] = OSPREY_ID_CONFIRM;
             response[5] = this->data[(overhead - CRC_overhead) + 5];
             this->set_id(response[5]);

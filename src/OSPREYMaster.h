@@ -34,6 +34,7 @@ template<typename Strategy = SoftwareBitBang>
 class OSPREYMaster : public PJON<Strategy> {
   public:
     Device_reference ids[OSPREY_MAX_SLAVES];
+    uint8_t configuration[OSPREY_CONFIGURATION_LENGTH];
     uint8_t required_config =
       PJON_TX_INFO_BIT | PJON_CRC_BIT | PJON_ACK_REQ_BIT | PJON_PORT_BIT;
 
@@ -78,24 +79,25 @@ class OSPREYMaster : public PJON<Strategy> {
     OSPREY_ID_REQUEST - RID (4 byte random id) - DEVICE ID (the new assigned) */
 
     void approve_id(uint32_t rid) {
-      uint8_t response[6];
+      uint8_t response[6 + OSPREY_CONFIGURATION_LENGTH];
       uint16_t state = reserve_id(rid);
       if(state == OSPREY_DEVICES_BUFFER_FULL) return;
       if(state == PJON_FAIL)
         return negate_id(PJON_NOT_ASSIGNED, rid);
-
       response[0] = OSPREY_ID_REQUEST;
       response[1] = (uint8_t)((uint32_t)(rid) >> 24);
       response[2] = (uint8_t)((uint32_t)(rid) >> 16);
       response[3] = (uint8_t)((uint32_t)(rid) >>  8);
       response[4] = (uint8_t)((uint32_t)(rid));
       response[5] = (uint8_t)(state);
+      for(uint8_t i = 0; i < OSPREY_CONFIGURATION_LENGTH; i++)
+        response[6 + i] = configuration[i];
 
       ids[response[5] - 1].packet_index = PJON<Strategy>::send_repeatedly(
         PJON_BROADCAST,
         PJON<Strategy>::bus_id,
         response,
-        6,
+        6 + OSPREY_CONFIGURATION_LENGTH,
         OSPREY_ID_REQUEST_INTERVAL,
         PJON<Strategy>::config | required_config,
         0,
@@ -345,6 +347,7 @@ class OSPREYMaster : public PJON<Strategy> {
       PJON<Strategy>::set_custom_pointer(this);
       PJON<Strategy>::set_error(static_error_handler);
       PJON<Strategy>::set_receiver(static_receiver_handler);
+      set_found_slave(OSPREY_dummy_found_slave);
       delete_id_reference();
       this->include_port(true);
     };
@@ -359,6 +362,12 @@ class OSPREYMaster : public PJON<Strategy> {
 
     void set_error(PJON_Error e) {
       _master_error = e;
+    };
+
+    /* Set a function to be called each time a new slave is found */
+
+    void set_found_slave(OSPREY_found_slave f) {
+      _found_slave = f;
     };
 
     /* Master packet handling update: */
@@ -376,9 +385,10 @@ class OSPREYMaster : public PJON<Strategy> {
     };
 
   private:
-    uint16_t        _list_id = PJON_MAX_PACKETS;
-    uint32_t        _list_time;
-    void           *_custom_pointer;
-    PJON_Receiver   _master_receiver;
-    PJON_Error      _master_error;
+    OSPREY_found_slave _found_slave;
+    uint16_t           _list_id = PJON_MAX_PACKETS;
+    uint32_t           _list_time;
+    void              *_custom_pointer;
+    PJON_Receiver      _master_receiver;
+    PJON_Error         _master_error;
 };

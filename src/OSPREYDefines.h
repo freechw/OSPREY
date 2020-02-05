@@ -26,9 +26,14 @@
   #define OSPREY_MASTER_ID              254
 #endif
 
-// Maximum devices handled by master
+// Maximum slaves handled by master
 #ifndef OSPREY_MAX_SLAVES
   #define OSPREY_MAX_SLAVES              25
+#endif
+
+// Configuration payload length added to OSPREY_ID_CONFIRM requests by master
+#ifndef OSPREY_CONFIGURATION_LENGTH
+  #define OSPREY_CONFIGURATION_LENGTH     0
 #endif
 
 // Dynamic addressing
@@ -45,15 +50,15 @@
 // Dynamic addressing port number
 #define OSPREY_DYNAMIC_ADDRESSING_PORT    1
 
-/* Maximum number of device id collisions during auto-addressing */
-#define OSPREY_MAX_ACQUIRE_ID_COLLISIONS 10
-/* Delay between device id acquisition and self request (1000 milliseconds) */
-#define OSPREY_ACQUIRE_ID_DELAY        1000
-/* Master free id broadcast response interval (100 milliseconds) */
+
+// Master free id broadcast response interval (100 milliseconds)
 #define OSPREY_ID_REQUEST_INTERVAL   100000
-/* Master ID_REQUEST and ID_NEGATE timeout */
+// Master ID_REQUEST and ID_NEGATE timeout
 #define OSPREY_ADDRESSING_TIMEOUT   4000000
-/* Master reception time during LIST_ID broadcast (250 milliseconds) */
+// Master reception time during LIST_ID broadcast (250 milliseconds)
 #define OSPREY_LIST_IDS_TIME         250000
 // Slave max collision delay when OSPREY_ID_LIST is received (250 milliseconds)
 #define OSPREY_COLLISION_DELAY          250
+
+typedef void (* OSPREY_found_slave)(uint32_t rid);
+static void OSPREY_dummy_found_slave(uint32_t) {};
