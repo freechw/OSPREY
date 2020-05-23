@@ -36,6 +36,10 @@
   #define OSPREY_CONFIGURATION_LENGTH     0
 #endif
 
+#define OSPREY_INDEX_FREE                 0
+#define OSPREY_INDEX_RESERVED             1
+#define OSPREY_INDEX_ASSIGNED             2
+
 // Dynamic addressing
 #define OSPREY_ID_REQUEST               200
 #define OSPREY_ID_CONFIRM               201
@@ -50,15 +54,9 @@
 // Dynamic addressing port number
 #define OSPREY_DYNAMIC_ADDRESSING_PORT    1
 
-
-// Master free id broadcast response interval (100 milliseconds)
-#define OSPREY_ID_REQUEST_INTERVAL   100000
 // Master ID_REQUEST and ID_NEGATE timeout
 #define OSPREY_ADDRESSING_TIMEOUT   4000000
 // Master reception time during LIST_ID broadcast (250 milliseconds)
 #define OSPREY_LIST_IDS_TIME         250000
 // Slave max collision delay when OSPREY_ID_LIST is received (250 milliseconds)
 #define OSPREY_COLLISION_DELAY          250
-
-typedef void (* OSPREY_found_slave)(uint32_t rid);
-static void OSPREY_dummy_found_slave(uint32_t) {};
