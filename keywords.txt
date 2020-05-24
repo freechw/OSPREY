@@ -15,6 +15,8 @@ OSPREYSlave	KEYWORD1
 
 request_id	KEYWORD2
 discard_device_id	KEYWORD2
+set_connected	KEYWORD2
+count_slaves	KEYWORD2
 
 #######################################
 # Instances (KEYWORD2)
@@ -25,6 +27,7 @@ discard_device_id	KEYWORD2
 # Constants (LITERAL1)
 #######################################
 
+OSPREY_MAX_SLAVES	LITERAL1
 OSPREY_MASTER_ID	LITERAL1
 OSPREY_DYNAMIC_ADDRESSING_PORT	LITERAL1
 OSPREY_ID_ACQUISITION_FAIL	LITERAL1
