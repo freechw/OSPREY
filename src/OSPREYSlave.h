@@ -25,7 +25,7 @@
 typedef void (* OSPREY_Connected)(const uint8_t *configuration, uint16_t length);
 static void OSPREY_dummy_connected(const uint8_t *, uint16_t) {};
 
-template<typename Strategy = SoftwareBitBang>
+template<typename Strategy>
 class OSPREYSlave : public PJON<Strategy> {
   public:
     bool connected = false;

@@ -5,7 +5,7 @@
         dL:KM  Configuration-less, plug-and-play dynamic networking over PJON.
        dM56Mh  EXPERIMENTAL, USE AT YOUR OWN RISK
       yM87MM:
-       NM*(Mm          /|  Copyright (c) 2014-2019
+       NM*(Mm          /|  Copyright (c) 2014-2020
    ___yM(U*MMo        /j|  Giovanni Blu Mitolo All rights reserved.
  _/OF/sMQWewrMNhfmmNNMN:|  Licensed under the Apache License, Version 2.0
 |\_\+sMM":{rMNddmmNNMN:_|  You may obtain a copy of the License at

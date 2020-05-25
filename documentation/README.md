@@ -17,10 +17,6 @@ OSPREYMaster<SoftwareBitBang> bus;
 uint8_t bus_id[] = {0, 0, 0, 1};
 OSPREYMaster<SoftwareBitBang> bus(bus_id);
 ```
-If debugging info is needed set the state of `bus.debug` accordingly:
-```cpp
-bus.debug = true;
-```
 
 This is the list of the addressing errors possibly returned by the error call-back:
 

@@ -6,7 +6,7 @@ Related implementation: https://github.com/gioblu/OSPREY/
 Compliant versions: OSPREY 0.1 and following
 Released into the public domain
 ```
-This document defines the dynamic addressing procedure used by a master and its slaves, in a master-slave configuration. All communication related to the addressing procedure must be transmitted on the `OSPREY_DYNAMIC_ADDRESSING_PORT` or port `1`. OSPREY is a protocol designed to enable dynamic networking and configuration-less networking over PJON. The MAC address feature included in PJON v4.0 is used to initially identify slaves and to assign device ids to them. The dynamic addressing procedure can occur in both local or shared mode.
+This document defines the dynamic addressing procedure used by a master and its slaves, in a master-slave configuration. All communication related to the addressing procedure must be transmitted on the `OSPREY_DYNAMIC_ADDRESSING_PORT` or port `1`. OSPREY is an Open Standard designed to enable quick, configuration-less, plug-and-play dynamic networking over PJON. The MAC address feature included in PJON v4.0 is used to initially identify slaves and to assign device ids to them. The dynamic addressing procedure can occur in both local or shared mode.
 
 ### Master-slave dynamic addressing
 ```cpp  
